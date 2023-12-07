@@ -1,0 +1,11 @@
+
+
+Não podemos aplicar o operador "new" em "FiguraGeometrica", 
+mas porque então podemos realizar o seguinte código de instanciação:
+
+===== CÓDIGO =====
+abstract class FiguraGeometrica {
+    //...
+}
+
+let figuras: FiguraGeometrica[] = new Array();

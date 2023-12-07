@@ -1,0 +1,4 @@
+
+
+Se uma classe que herda de uma abstrata e não implementa os seus métodos, o
+que ocorre?

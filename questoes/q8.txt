@@ -1,0 +1,8 @@
+
+
+Crie uma interface chamada "Incomparavel" com um método chamado "comparar" que:
+    -> receba uma forma geométrica como parâmetro e retorna um inteiro como resultado. 
+
+Implemente em cada uma das classes do exemplo anterior: 
+    -> a interface retornando -1, 0 e 1 caso 
+    -> a área da forma seja menor (-1), igual (0) ou maior (1) que a passada via parâmetro.
