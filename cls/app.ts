@@ -27,11 +27,6 @@ export class App {
     postLastId: File
     settingsOptionA: File
 
-    // Content for empty parameters
-    mockProfile: Perfil
-    mockPost: Postagem
-    mockAdvancedPost: PostagemAvancada
-
     // Support classes
     calendar: Calendario
 
@@ -52,10 +47,6 @@ export class App {
         this.settingsOptionA = new File("../txt/settingsOptionA.txt", "")
 
         this.calendar = new Calendario()
-        
-        this.mockProfile = new Perfil(-1, "Void", "void@gmail.com")
-        this.mockPost = new Postagem(-1, "void", 0, 0, "01-01-01", this.mockProfile)
-        this.mockAdvancedPost = new PostagemAvancada(-1, "void", 0, 0, "01-01-01", this.mockProfile, ["#void"], 0)
         
         // This is only apropriate to settings menu options, otherwise, it is better to create functions
         this._triggerOptionA = Number(this.settingsOptionA.read())
@@ -179,39 +170,38 @@ export class App {
     }
 
     menu(): string {
-        // return `
-        // ===== REDE SOCIAL =====
-        // 0. Sair
-
-        // ===== PERFIL =====
-        // 1. incluir    2. consultar
-
-        // ===== POSTAGEM =====
-        // 3. incluir    4. consultar    5. curtir    6. descurtir
-        // 8. exibir por perfil    9. exibir por hashtag
-
-        // ===== VIEWS =====
-        // 7. decrementar visualizações
-        
-        // ===== CONSULTAS =====
-        // 10. repositório de perfis    11. repositório de postagens
-        // 12. postagens + populares    13. hashtags + populares
-
-        // ===== FUNCIONALIDADES =====
-        // a. adicionar hashtag
-        // b. remover postagem
-        // c. editar postagem
-        // d. ver postagens (ano e mês)
-        // e. resetar repositório de postagens
-
-        // ===== CONFIGURAÇÕES =====
-        // 01. Ativar simulação de atividade
-        // `
-
         return `
         ===== REDE SOCIAL =====
-        0. Sair    5. curtir
+        0. Sair
+
+        ===== PERFIL =====
+        1. incluir    2. consultar
+
+        ===== POSTAGEM =====
+        3. incluir    4. consultar    5. curtir    6. descurtir
+
+        ===== VIEWS =====
+        7. decrementar visualizações
+
+        ===== POSTAGEM =====
+        8. exibir por perfil    9. exibir por hashtag
+        
+        ===== CONSULTAS =====
+        10. repositório de perfis    11. repositório de postagens
+        12. postagens + populares    13. hashtags + populares
+
+        ===== CONFIGURAÇÕES =====
+        01. Ativar simulação de atividade
         `
+
+        /*
+        ===== FUNCIONALIDADES =====
+        a. adicionar hashtag
+        b. remover postagem
+        c. editar postagem
+        d. ver postagens (ano e mês)
+        e. resetar repositório de postagens
+        */
     }
     
     requisitarEntrada(sentence: string, empty: boolean=false): string {
@@ -386,27 +376,22 @@ export class App {
         }
     }
     
-    /* Case 1 
-    Condições:
-        O id é incrementado então ele não se repete (elimina verificação se id já existe)
-        As coisas que são tratadas aqui têm somente a ver com as entradas
-    */
+    // Case 1 (profileId descartado, pois ++ automaticamente)
     incluirPerfil(): void { 
         try {
-            // Entradas e seus tratamentos respectivamente
-            const inputName: string = this.requisitarEntrada("Informe seu nome >>> ")
-            new self.Excecao().nomeInvalido(inputName)
-            const inputEmail: string = this.requisitarEntrada("Informe seu email >>> ")
-            new self.Excecao().emailInvalido(inputEmail)
+            const inputName: string = this.requisitarEntrada("Informe seu nome")
+            new self.Excecao().verificarEntrada(inputName, false)
+            const inputEmail: string = this.requisitarEntrada("Informe seu email")
+            new self.Excecao().verificarEntradaEmail(inputEmail)
             
             // Se os formatos forem corretos: cria
             const newProfile: Perfil = new Perfil(this.redeSocial.repPerfis.lastId, inputName, inputEmail)
             
-            // (Não há exceção) pois o "id" nunca se repete (não há outro motivo)
+            // (Não há exceção) "id" nunca se repete
             this.redeSocial.incluirPerfil(newProfile)
             
             this.redeSocial.repPerfis.atualizarUltimoIdPerfil()
-            console.log("AVISO: Perfil criado...")
+            console.log("\nAVISO: Perfil criado...")
             this.teclarEnter()
         } 
         catch (err: any) {
@@ -441,13 +426,6 @@ export class App {
             let profileHashtags: string[] = []
             let views: number
             let hashtagsAmount: number
-
-            // postType = "2"
-            // today = "2023-01-01"
-            // profileId = 5
-            // text = "teste"
-            // views = 10
-            // hashtagsAmount = 2
             
             do {
                 postType = this.requisitarEntrada("Informe o tipo da postagem (1 ou 2)")
@@ -491,7 +469,7 @@ export class App {
             }
 
             this.redeSocial.repPosts.atualizarUltimoIdPostagem()
-            console.log("AVISO: Postagem criada...")
+            console.log("\nAVISO: Postagem criada...")
             this.teclarEnter()
         }
         catch (err: any) {
@@ -610,7 +588,7 @@ export class App {
                 query = this.redeSocial.consultarPostagensPorHashtag(hashtag)
             }
 
-            console.log("AVISO: Postagens encontradas")
+            console.log("\nAVISO: Postagens encontradas")
             this.redeSocial.repPosts.exibirPostagens(query)
             // Retirar views após exibir
             this.redeSocial.decrementarVisualizacoesMultiplas(query)

@@ -8,6 +8,36 @@ export class AplicacaoError extends Error {
 
 /* ================================================================================================ */
 
+export class EntradaEmailSemFinalError extends AplicacaoError {
+    constructor(message: string) {
+        super(message)
+    }
+}
+
+export class EntradaPequenaError extends AplicacaoError {
+    constructor(message: string) {
+        super(message)
+    }
+}
+
+export class EntradaSemArrobaError extends AplicacaoError {
+    constructor(message: string) {
+        super(message)
+    }
+}
+
+export class EntradaSemLetraError extends AplicacaoError {
+    constructor(message: string) {
+        super(message)
+    }
+}
+
+export class EntradaVaziaError extends AplicacaoError {
+    constructor(message: string) {
+        super(message)
+    }
+}
+
 export class PerfilExistenteError extends AplicacaoError {
     constructor(message: string) {
         super(message)
@@ -193,57 +223,36 @@ export class Excecao {
         return inputData === " "
     }
 
-    entradaSemTamanhoMinimo(inputData: string): boolean {
-        return inputData.length < 3
+    verificarEntrada(inputData: string, isEmail: boolean): void {
+        if (inputData.length === 0) {
+            throw new EntradaVaziaError("\nERRO: não é permitido dados de entrada vazios...")
+        }
+        if (inputData.length < 3) {
+            throw new EntradaPequenaError("\nERRO: texto possui menos de 3 caracteres...")
+        }
+        if (!isEmail) {
+            this.entradaPossuiAlgumaLetra(inputData)
+        }
     }
 
-    entradaSomenteLetras(inputData: string): boolean {
+    verificarEntradaEmail(inputData: string): void {
+        this.verificarEntrada(inputData, true)
+
+        if (!inputData.includes("@")) {
+            throw new EntradaSemArrobaError("\nERRO: texto de email deve ter um arroba...")
+        }
+
+        if (!inputData.includes(".com")) {
+            throw new EntradaEmailSemFinalError("\nERRO: texto de email deve terminar com: .com")
+        }
+    }
+
+    entradaPossuiAlgumaLetra(inputData: string): void {
         for (let i = 0; i < inputData.length; i++) {
             const letter = inputData[i].charCodeAt(0)
-            console.log(letter)
             if (letter < 65 || letter > 122) {
-                return false
+                throw new EntradaSemLetraError("\nERRO: texto não possui caracteres legíveis...")
             }
-        } 
-        return true
-    }
-    
-    // Tratmentos adicional p/ email
-    entradaSemArroba(inputData: string): boolean {
-        for (let i = 0; i < inputData.length; i++) {
-            if (inputData[i] === "@") {
-                return true
-            }
-        }
-        return false
-    }
-
-    // Verificação de exceções
-    nomeInvalido(inputData: string): void {
-        // Texts may not have special characters (light treatment)
-        if (
-            !this.entradaSomenteEspaco(inputData) &&
-            !this.entradaSemTamanhoMinimo(inputData) &&
-            !this.entradaSomenteLetras(inputData)
-        ) {
-            throw new NomeInvalidoError("\nERRO: Nome em formato inválido...")
-        }
-    }
-
-    emailInvalido(inputData: string): void {
-        /*
-        Email may have special characters (light treatment)
-        Any of the functions below turn the email invalid 
-        */
-        // console.log("A", this.entradaSomenteEspaco(inputData))
-        // console.log("B", this.entradaSemTamanhoMinimo(inputData))
-        // console.log("C", this.entradaSemArroba(inputData))
-        if (
-            !this.entradaSomenteEspaco(inputData) &&
-            !this.entradaSemTamanhoMinimo(inputData) &&
-            !this.entradaSemArroba(inputData)
-        ) {
-            throw new EmailInvalidoError("\nERRO: Email em formato inválido...")
         }
     }
 
@@ -264,6 +273,13 @@ export class Excecao {
 
     excecao(error: any) {
         if (
+            // Entrada
+            error instanceof EntradaEmailSemFinalError ||
+            error instanceof EntradaPequenaError ||
+            error instanceof EntradaSemArrobaError ||
+            error instanceof EntradaSemLetraError ||
+            error instanceof EntradaVaziaError ||
+
             // Perfil
             error instanceof PerfilExistenteError ||
             error instanceof PerfilExistenteError ||
