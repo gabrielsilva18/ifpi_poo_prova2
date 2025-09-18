@@ -1,4 +1,0 @@
-
-
-Refaça a questão 04 do exercício usando interfaces com os métodos propostos em vez de herança. 
-Crie também um script que instancie e teste diferentes formas geométricas.
