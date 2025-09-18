@@ -1,4 +1,4 @@
-# IFPI POO Prova 2 - Rede Social
+# Rede Social
 
 ## Descrição
 Este projeto foi desenvolvido como atividade avaliativa da disciplina de Programação Orientada a Objetos (POO) do IFPI. Trata-se de uma simulação de rede social, onde usuários podem criar perfis, publicar postagens, curtir/descurtir, visualizar postagens por hashtag ou perfil, e interagir com conteúdos avançados.
