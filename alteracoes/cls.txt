@@ -1,4 +1,0 @@
-
-
-criação do arquivo "excecoes.ts" (guarda as exceções)
-criação do arquivo "excecao.ts" (trata as exceções)

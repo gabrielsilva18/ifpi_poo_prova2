@@ -1,4 +1,0 @@
-
-
-Adição de explicação na função adicionarHashtag com /**/
-Inserção de exceção: HashtagRepetidaError
